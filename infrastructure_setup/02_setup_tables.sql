@@ -1,7 +1,7 @@
 -- Set context
 USE ROLE ACCOUNTADMIN;
 USE DATABASE WORKSHOP_DB;
-USE SCHEMA RAW;
+USE SCHEMA GN_RAW;
 
 -- Create landing tables with the 2-column pattern
 

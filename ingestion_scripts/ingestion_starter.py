@@ -10,7 +10,7 @@ def load_environment():
     """
     print("Loading environment variables...")
     # TODO: Load environment variables into system context
-    pass
+    load_dotenv()
 
 def fetch_api_data(base_url, endpoint):
     """
@@ -24,12 +24,19 @@ def fetch_api_data(base_url, endpoint):
         dict/list: The parsed JSON data from the response, in the form of a python dict.
     """
     # TODO: Construct our target URL
-    url = None
+    url = base_url + endpoint
 
     print(f"\nFetching data from: {url}")
     
     # TODO: Send a GET request to the URL using requests
+    response = requests.get(url)
     # TODO: Check if response status code is 200 (OK)
+    if response.status_code == 200:
+        print("success!")
+        return response.json()
+    else:
+        print("Failure!")
+        return None
     # TODO: Return parsed JSON data if successful, else print error and return None
     pass
 
@@ -43,6 +50,14 @@ def connect_to_snowflake():
     print("Connecting to Snowflake...")
     # TODO: Create and return a snowflake connection object using os.getenv() for credentials
     # Credentials needed: account, user, password, warehouse, database, schema
+    return snowflake.connector.connect(
+        user= os.getenv("SNOWFLAKE_USER"),
+        password= os.getenv("SNOWFLAKE_PASSWORD"),
+        account= os.getenv("SNOWFLAKE_ACCOUNT"),
+        warehouse="WORKSHOP_WH",
+        database="WORKSHOP_DB",
+        schema="GN_RAW"
+    )
     pass
 
 def load_data_to_snowflake(cursor, table_name, data):
@@ -54,8 +69,11 @@ def load_data_to_snowflake(cursor, table_name, data):
         data (dict/list): The JSON data to insert.
     """
     # TODO: Write SQL INSERT query targeting table_name and RAW_PAYLOAD column
+    query = f"INSERT INTO {table_name} (RAW_PAYLOAD) SELECT PARSE_JSON(%s)"
     # TODO: Convert Python object to JSON string using json.dumps()
+    parsed = json.dumps(data)
     # TODO: Execute query using cursor.execute()
+    cursor.execute(query, parsed)
     pass
 
 def main():
@@ -71,21 +89,22 @@ def main():
     target_table = "raw_posts"
     
     # TODO: Call fetch_api_data() with api_base_url and endpoint
-    data = None
+    data = fetch_api_data(api_base_url, endpoint)
     
     # 3. Database Operations
     # TODO: Establish connection using connect_to_snowflake()
-    conn = None
+    conn = connect_to_snowflake()
 
     # TODO: Open a cursor from the connection
-    cursor = None
+    cursor = conn.cursor()
 
     # TODO: Call load_data_to_snowflake() to insert the data
-
+    load_data_to_snowflake(cursor, target_table, data)
     
     # 4. Cleanup
     print("Pipeline complete!")
     # TODO: Close cursor and connection objects
-
+    cursor.close()
+    conn.close()
 if __name__ == "__main__":
     main()
