@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: stg_posts
+    description: >
+      Staging model for posts data from jsonplaceholder. 
+      Flattens raw JSON payloads from `raw_posts` using LATERAL FLATTEN
+      and casts data types.
+    columns:
+      - name: column_name
+        description: "Primary key. You can specify details about the column here."
+        tests:
+          - unique
+          - not_null
+      - name: column_name2
+        description: "a column. You can specify details about the column here."
+        tests:
+          - unique
+          - not_null
+
+      - name: column_name3
+        description: "a column. You can specify details about the column here."
+        tests:
+          - unique
+          - not_null

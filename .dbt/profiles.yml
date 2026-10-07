@@ -1,0 +1,13 @@
+my_dbt_project:
+  outputs:
+    dev:
+      account: "JCWVQMU-FKB88198"
+      role: "ACCOUNTADMIN"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      type: snowflake
+      warehouse: "WORKSHOP_WH"
+      database: "WORKSHOP_DB"
+      schema: "LK"
+      threads: 1
+  target: dev

@@ -1,0 +1,1 @@
+SELECT count(*) FROM raw.raw_posts;

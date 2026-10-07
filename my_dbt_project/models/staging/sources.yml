@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: jsonplaceholder
+    database: WORKSHOP_DB
+    schema: RAW
+    description: >
+      Raw schema for data from jsonplaceholder api
+    tables:
+      - name: raw_posts
+        description: >
+          Endpoint: https://jsonplaceholder.typicode.com/posts
+          Grain: One post from one user, with title and body text. each post has a unique post id
