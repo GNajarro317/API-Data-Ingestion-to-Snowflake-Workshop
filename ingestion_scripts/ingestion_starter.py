@@ -38,7 +38,7 @@ def fetch_api_data(base_url, endpoint):
         print("Failure!")
         return None
     # TODO: Return parsed JSON data if successful, else print error and return None
-    pass
+
 
 def connect_to_snowflake():
     """
@@ -50,7 +50,7 @@ def connect_to_snowflake():
     print("Connecting to Snowflake...")
     # TODO: Create and return a snowflake connection object using os.getenv() for credentials
     # Credentials needed: account, user, password, warehouse, database, schema
-    return snowflake.connector.connect(
+    con = snowflake.connector.connect(
         user= os.getenv("SNOWFLAKE_USER"),
         password= os.getenv("SNOWFLAKE_PASSWORD"),
         account= os.getenv("SNOWFLAKE_ACCOUNT"),
@@ -58,7 +58,7 @@ def connect_to_snowflake():
         database="WORKSHOP_DB",
         schema="GN_RAW"
     )
-    pass
+    return con
 
 def load_data_to_snowflake(cursor, table_name, data):
     """
@@ -70,11 +70,13 @@ def load_data_to_snowflake(cursor, table_name, data):
     """
     # TODO: Write SQL INSERT query targeting table_name and RAW_PAYLOAD column
     query = f"INSERT INTO {table_name} (RAW_PAYLOAD) SELECT PARSE_JSON(%s)"
+
     # TODO: Convert Python object to JSON string using json.dumps()
     parsed = json.dumps(data)
+    
     # TODO: Execute query using cursor.execute()
     cursor.execute(query, parsed)
-    pass
+
 
 def main():
     """
